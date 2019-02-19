@@ -12,6 +12,7 @@ with open(os.path.join(folder, "flask_wtf_top/__init__.py")) as f:
     for line in f:
         if line.startswith("__version__ = "):
             version = line.split("=")[-1].strip().replace('"', "")
+            break
 
 setup(
     name="flask_wtf_top",
