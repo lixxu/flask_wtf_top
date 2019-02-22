@@ -8,7 +8,7 @@ try:
 except ImportError:
     from flask_wtf import Form as FlaskForm
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 class ToppingForm(FlaskForm):
@@ -24,7 +24,7 @@ class ToppingForm(FlaskForm):
         excludes = self.get_attrs("excludes")
 
         dct = {}
-        for name, field in self._fields:
+        for name, field in self._fields.items():
             if name in excludes:
                 continue
 
