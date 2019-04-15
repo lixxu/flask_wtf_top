@@ -3,12 +3,13 @@
 
 from __future__ import unicode_literals
 import six
+from flask import current_app
 try:
     from flask_wtf import FlaskForm
 except ImportError:
     from flask_wtf import Form as FlaskForm
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 
 
 class ToppingForm(FlaskForm):
@@ -22,6 +23,9 @@ class ToppingForm(FlaskForm):
         uppers = self.get_attrs("uppers")
         nostrips = self.get_attrs("nostrips")
         excludes = self.get_attrs("excludes")
+        field_name = current_app.config.get("WTF_CSRF_FIELD_NAME")
+        if field_name:
+            excludes.append(field_name)
 
         dct = {}
         for name, field in self._fields.items():
