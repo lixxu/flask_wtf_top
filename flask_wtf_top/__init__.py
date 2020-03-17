@@ -13,7 +13,7 @@ except ImportError:
 
 from wtforms.validators import ValidationError
 
-__version__ = "0.3.2"
+__version__ = "0.3.3"
 
 
 def required_if(
@@ -63,7 +63,7 @@ class ToppingForm(FlaskForm):
         uppers = self.get_attrs("uppers")
         nostrips = self.get_attrs("nostrips")
         excludes = self.get_attrs("excludes")
-        aliases = self.get_attrs("aliases")
+        aliases = self.get_attrs("aliases", is_list=False)
         field_name = current_app.config.get("WTF_CSRF_FIELD_NAME")
         if field_name:
             excludes.append(field_name)
