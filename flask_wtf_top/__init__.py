@@ -13,7 +13,7 @@ except ImportError:
 
 from wtforms.validators import ValidationError
 
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 
 
 def required_if(
@@ -86,13 +86,17 @@ class ToppingForm(FlaskForm):
 
         return dct
 
-    def get_attrs(self, kind="lowers"):
-        attrs_ = []
+    def get_attrs(self, kind="lowers", is_list=True):
+        attrs_ = [] if is_list else {}
         attr_name = "__{}__".format(kind)
         for kls in self.__class__.__mro__:
             if kls.__name__ == "ToppingForm":
                 break
 
-            attrs_.extend(kls.__dict__.get(attr_name, []))
+            if is_list:
+                attrs_.extend(kls.__dict__.get(attr_name, []))
+            else:
+                for k, v in kls.__dict__.get(attr_name, {}).items():
+                    attrs_.setdefault(k, v)
 
-        return list(set(attrs_))
+        return list(set(attrs_)) if is_list else attrs_
