@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+
 import operator
+
 import six
 from flask import current_app
 
@@ -13,7 +15,7 @@ except ImportError:
 
 from wtforms.validators import ValidationError
 
-__version__ = "0.3.3"
+__version__ = "2021.11.03"
 
 
 def required_if(
@@ -58,15 +60,15 @@ class ToppingForm(FlaskForm):
     __excludes__ = []
     __aliases__ = {}
 
-    def parse_form(self):
+    def parse_form(self, box_wrap=False):
         lowers = self.get_attrs("lowers")
         uppers = self.get_attrs("uppers")
         nostrips = self.get_attrs("nostrips")
         excludes = self.get_attrs("excludes")
         aliases = self.get_attrs("aliases", is_list=False)
-        field_name = current_app.config.get("WTF_CSRF_FIELD_NAME")
-        if field_name:
-            excludes.append(field_name)
+        name = current_app.config.get("WTF_CSRF_FIELD_NAME") or "csrf_token"
+        if name:
+            excludes.append(name)
 
         dct = {}
         for name, field in self._fields.items():
@@ -83,6 +85,14 @@ class ToppingForm(FlaskForm):
                 data = data.strip()
 
             dct[aliases.get(name, name)] = data
+
+        if box_wrap:
+            try:
+                from box import Box
+
+                return Box(dct)
+            except ImportError:
+                pass
 
         return dct
 

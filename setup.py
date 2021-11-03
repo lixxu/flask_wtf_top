@@ -5,9 +5,11 @@ Simple wrapper for parsing data for flask_wtf
 """
 
 import os.path
+
 from setuptools import setup
 
 folder = os.path.dirname(os.path.abspath(__file__))
+version = ""
 with open(os.path.join(folder, "flask_wtf_top/__init__.py")) as f:
     for line in f:
         if line.startswith("__version__ = "):
