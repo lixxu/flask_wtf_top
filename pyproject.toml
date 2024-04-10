@@ -1,0 +1,25 @@
+[project]
+name = "flask_wtf_top"
+authors = [{ name = "Lix Xu", email = "xuzenglin@gmail.com" }]
+description = "Simple wrapper for parsing data for flask_wtf"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE.txt" }
+keywords = ["flask_wtf"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+]
+dependencies = ["flask_wtf", "wtforms>=3.0.0"]
+dynamic = ["version"]
+[tool.setuptools.dynamic]
+version = { attr = "flask_wtf_top.__version__" }
+
+[project.urls]
+"Homepage" = "https://github.com/lixxu/flask_wtf_top"
+"Bug Tracker" = "https://github.com/lixxu/flask_wtf_top/issues"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
