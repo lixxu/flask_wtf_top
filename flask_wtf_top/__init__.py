@@ -17,7 +17,7 @@ except ImportError:
 from wtforms import Field
 from wtforms.validators import ValidationError
 
-__version__ = "2024.04.10"
+__version__ = "2024.06.06"
 FILE_FIELDS = {"FileField", "MultipleFileField"}
 NON_VALUE_FIELDS = {"SubmitField"} | FILE_FIELDS
 NON_HTML_FIELDS = (
@@ -111,21 +111,34 @@ class ToppingForm(FlaskForm):
     def submit_fields(self) -> list:
         return self.filter_fields("SubmitField")
 
-    def get_file(self, fo: Any) -> dict:
+    @classmethod
+    def collect_files(cls, names: list = []) -> dict:
+        files = {}
+        keys = [key for key in request.files]
+        for name in set(names + keys):
+            if up_files := cls.get_files(name):
+                files[name] = up_files
+
+        return files
+
+    @classmethod
+    def get_file(cls, fo: Any) -> dict:
         return dict(
             file=fo,
             filename=fo.filename,
+            mimetype=fo.mimetype,
             secure_filename=secure_filename(fo.filename),
         )
 
-    def get_files(self, name: str) -> list:
+    @classmethod
+    def get_files(cls, name: str) -> list:
         files = []
         file_names = set()
         for fo in request.files.getlist(name):
             if fo and fo.filename:
-                info = self.get_file(fo)
+                info = cls.get_file(fo)
                 if info["secure_filename"] not in file_names:
-                    files.append(self.get_file(fo))
+                    files.append(cls.get_file(fo))
 
                 file_names.add(info["secure_filename"])
 
