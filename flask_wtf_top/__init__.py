@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import operator
+import random
 from datetime import datetime, timezone
 from functools import cached_property
+from pathlib import Path
 from typing import Any
 
 from flask import current_app, request
@@ -17,7 +19,7 @@ except ImportError:
 from wtforms import Field
 from wtforms.validators import ValidationError
 
-__version__ = "2024.06.06"
+__version__ = "2024.07.03"
 FILE_FIELDS = {"FileField", "MultipleFileField"}
 NON_VALUE_FIELDS = {"SubmitField"} | FILE_FIELDS
 NON_HTML_FIELDS = (
@@ -112,6 +114,17 @@ class ToppingForm(FlaskForm):
         return self.filter_fields("SubmitField")
 
     @classmethod
+    def get_secure_filename(cls, filename: str) -> str:
+        sec_name = secure_filename(filename)
+        p = Path(sec_name)
+        if not p.suffix:
+            ts = datetime.now().strftime("%Y%m%d%H%M%S%f")
+            rd = random.randint(100000, 999999)
+            sec_name = secure_filename(f"{ts}{rd}_{filename}")
+
+        return sec_name
+
+    @classmethod
     def collect_files(cls, names: list = []) -> dict:
         files = {}
         keys = [key for key in request.files]
@@ -127,7 +140,7 @@ class ToppingForm(FlaskForm):
             file=fo,
             filename=fo.filename,
             mimetype=fo.mimetype,
-            secure_filename=secure_filename(fo.filename),
+            secure_filename=cls.get_secure_filename(fo.filename),
         )
 
     @classmethod
@@ -138,7 +151,7 @@ class ToppingForm(FlaskForm):
             if fo and fo.filename:
                 info = cls.get_file(fo)
                 if info["secure_filename"] not in file_names:
-                    files.append(cls.get_file(fo))
+                    files.append(info)
 
                 file_names.add(info["secure_filename"])
 
