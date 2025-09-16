@@ -4,12 +4,13 @@ authors = [{ name = "Lix Xu", email = "xuzenglin@gmail.com" }]
 description = "Simple wrapper for parsing data for flask_wtf"
 readme = "README.md"
 requires-python = ">=3.9"
-license = { file = "LICENSE.txt" }
 keywords = ["flask_wtf"]
+license-files = ["LICENSE.txt"]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: BSD License",
+    "Intended Audience :: Developers",
     "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Development Status :: 5 - Production/Stable",
 ]
 dependencies = ["flask_wtf", "wtforms>=3.0.0"]
 dynamic = ["version"]
